@@ -1,0 +1,40 @@
+{
+  "name": "hapi-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
+    "lint": "eslint .",
+    "lintfix": "eslint . --fix",
+    "start": "node server.js",
+    "test": "lab -a code",
+    "test-coverage": "lab -t 75 -a code",
+    "test-cov-html": "lab -r html -o coverage.html -a code"
+  },
+  "author": "Josh Iverson <jiverson222@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@types/hapi": "^17.0.10",
+    "async": "^2.6.0",
+    "boom": "^7.2.0",
+    "hapi": "^17.3.1",
+    "inert": "^5.1.0",
+    "joi": "^13.2.0",
+    "request": "^2.85.0",
+    "request-promise-native": "^1.0.5"
+  },
+  "devDependencies": {
+    "code": "^5.2.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "lab": "^15.4.1",
+    "prettier": "^1.12.1"
+  },
+  "engines": {
+    "node": ">=8.9.0"
+  }
+}

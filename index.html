@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <script>
+        const itemHtml = `
+            <div style="padding:.75rem 0">
+                <div class="box">
+                    <article class="media">
+                        <div class="media-left">
+                            <figure class="image is-100x100">
+                                <img src="<%= item.thumbnailImage %>" alt="Image">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <div class="content">
+                                <p>
+                                    <strong><%= item.name %></strong>
+                                    <small>$<%= item.salePrice %></small>
+                                    <br>
+                                    <%= item.shortDescription %>
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        `
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const { fromEvent, NEVER } = rxjs
+            const { ajax } = rxjs.ajax
+            const { map, filter, switchMap, debounceTime, catchError } = rxjs.operators
+            const searchBox = document.getElementById("search-box")
+            const searchCtrl = document.getElementById("search-control")
+            const compiled = _.template(`<% items.forEach(function(item) { %>${itemHtml}<% }); %>`)
+
+            const userInputSearchBox = fromEvent(
+                searchBox,
+                "input"
+            )
+                .pipe(
+                    debounceTime(200),
+                    filter(evt => evt.target.value.length > 2),
+                    map(evt => {
+                        searchCtrl.classList.add("is-loading")
+                        return evt.target.value
+                    }),
+                    switchMap(val => ajax({
+                            url: `/search?q=${val}`,
+                            method: "GET"
+                        }).pipe(catchError(() => {
+                            searchCtrl.classList.remove("is-loading")
+                            return NEVER
+                        }))
+                    ))
+                .subscribe(e => {
+                    searchCtrl.classList.remove("is-loading")
+                    document.getElementById("items-output").innerHTML = compiled({ items: e.response })
+                })
+        })
+    </script>
+</head>
+<body>
+<section class="section">
+    <div class="container">
+        <div class="field">
+            <div id="search-control" class="control is-medium">
+                <input id="search-box" class="input is-medium" type="text" placeholder="Find item">
+            </div>
+        </div>
+        <hr/>
+        <div id="items-output">
+            <!-- Items -->
+        </div>
+    </div>
+</section>
+
+<script src="https://unpkg.com/rxjs@6.0.0/bundles/rxjs.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+</body>
+</html>
