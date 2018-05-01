@@ -12,7 +12,7 @@ Open your browser:
 [http://localhost:8000](http://localhost:8000)  
 or  
 Test the search api via space seperated terms     
-[http://localhost:8000?search=backpack zipper](http://localhost:8000?search=backpack zipper)  
+[http://localhost:8000/search?q=backpack zipper](http://localhost:8000/search?q=backpack%20zipper)  
 
 ### Test
 ```
